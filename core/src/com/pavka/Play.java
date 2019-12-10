@@ -626,7 +626,7 @@ public class Play extends Stage implements Screen {
             if(Path.isHexInside(paths, h)) {
                 drugHex = h;
                 isDrugging = true;
-                drugPath = paths;
+                drugPath = new Array<Path>(paths);
                 if(paths.get(0).startForce != null) {
                     drugForce = paths.get(0).startForce;
                 }
@@ -1142,7 +1142,7 @@ public class Play extends Stage implements Screen {
 
             Hex start = paths.first().fromHex;
             Hex finish = paths.peek().toHex;
-            System.out.println("Drug Hex is End - " + (drugHex == drugPath.peek().toHex) + " drug row = " + drugHex.row + "  " + drugPath.peek().toHex.row);
+
             if (drugHex != drugPath.peek().toHex) {
                 paths = navigate(start, current);
                 paths.addAll(navigate(current, finish));
@@ -1150,9 +1150,18 @@ public class Play extends Stage implements Screen {
                 mileStone.days = Path.getDaysToGo(paths, speed);
             }
             else {
+                //paths.addAll(navigate(drugHex, current));
+                paths = new Array<Path>(drugPath);
                 paths.addAll(navigate(drugHex, current));
                 double speed = drugForce == null ? INFANTRY.SPEED : drugForce.getForceSpeed();
+                //mileStone.days = Path.getDaysToGo(paths, speed);
+                if(mileStone != null) {
+                    mileStone.remove();
+                    mileStone = null;
+                }
+                mileStone = new MileStone(current);
                 mileStone.days = Path.getDaysToGo(paths, speed);
+                addActor(mileStone);
             }
         }
 //        if (selectedHex != null) {
