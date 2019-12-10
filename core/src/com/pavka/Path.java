@@ -12,6 +12,7 @@ public class Path extends Image implements Connection<Hex> {
     Hex fromHex;
     Hex toHex;
     float cost;
+    Force startForce;
 
     //static Texture texture = new Texture("Symbols/Blue.png");
 
