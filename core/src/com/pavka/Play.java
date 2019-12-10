@@ -62,6 +62,7 @@ public class Play extends Stage implements Screen {
     MileStone start;
     ShapeRenderer shapeRenderer;
     Array<Path> paths;
+    Array<Path> drugPath;
     private HexagonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Force selectedForce;
@@ -241,6 +242,7 @@ public class Play extends Stage implements Screen {
         if(keycode == Input.Keys.G) {
             System.out.println("Selected force = " + selectedForce + " selected window = " + selectedWindow + " force to attach = " + forceToAttach + " selected hex = " +
                     selectedHex);
+            System.out.println("Start Hex = " + startHex + " End Hex = " + endHex + " Drug Hex = " + drugHex);
             if(selectedWindow != null) {
                 System.out.println("Choice = " + selectedWindow.choice);
             }
@@ -624,7 +626,7 @@ public class Play extends Stage implements Screen {
             if(Path.isHexInside(paths, h)) {
                 drugHex = h;
                 isDrugging = true;
-
+                drugPath = paths;
                 if(paths.get(0).startForce != null) {
                     drugForce = paths.get(0).startForce;
                 }
@@ -650,9 +652,10 @@ public class Play extends Stage implements Screen {
                 }
                 isDrugging = false;
                 drugHex = null;
+                drugPath = null;
                 return true;
             }
-
+            drugPath = null;
             drugHex = null;
             float X = getMousePosOnMap().x;
             float Y = getMousePosOnMap().y;
@@ -1139,10 +1142,18 @@ public class Play extends Stage implements Screen {
 
             Hex start = paths.first().fromHex;
             Hex finish = paths.peek().toHex;
-            paths = navigate(start, current);
-            paths.addAll(navigate(current, finish));
-            double speed = drugForce == null? INFANTRY.SPEED : drugForce.getForceSpeed();
-            mileStone.days = Path.getDaysToGo(paths, speed);
+            System.out.println("Drug Hex is End - " + (drugHex == drugPath.peek().toHex) + " drug row = " + drugHex.row + "  " + drugPath.peek().toHex.row);
+            if (drugHex != drugPath.peek().toHex) {
+                paths = navigate(start, current);
+                paths.addAll(navigate(current, finish));
+                double speed = drugForce == null ? INFANTRY.SPEED : drugForce.getForceSpeed();
+                mileStone.days = Path.getDaysToGo(paths, speed);
+            }
+            else {
+                paths.addAll(navigate(drugHex, current));
+                double speed = drugForce == null ? INFANTRY.SPEED : drugForce.getForceSpeed();
+                mileStone.days = Path.getDaysToGo(paths, speed);
+            }
         }
 //        if (selectedHex != null) {
 //
