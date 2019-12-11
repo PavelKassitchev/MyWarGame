@@ -30,7 +30,7 @@ public class Order extends Message {
 
     public void setPathsOrder(Array<Path> pathsOrder) {
         this.pathsOrder = pathsOrder;
-        if (!pathsOrder.isEmpty()) {
+        if (pathsOrder != null && !pathsOrder.isEmpty()) {
             mileStone = new MileStone(pathsOrder.peek().getToNode());
         }
     }

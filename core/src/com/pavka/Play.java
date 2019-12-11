@@ -904,7 +904,8 @@ public class Play extends Stage implements Screen {
                         return true;
                     }
                     if(label == choice.showLabel) {
-                        if(!selectedForce.order.pathsOrder.isEmpty()) {
+                        System.out.println("Selected Force = " + selectedForce + " Order = " + selectedForce.order + " Path Order = " + selectedForce.order.pathsOrder);
+                        if(selectedForce.order.pathsOrder != null && !selectedForce.order.pathsOrder.isEmpty()) {
 
                             clearActor(start, mileStone);
 
