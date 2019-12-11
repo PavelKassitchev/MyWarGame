@@ -23,8 +23,8 @@ public class Force extends Image {
 
     public Play play;
 
-    public Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
-    public Texture textureAustria = new Texture("symbols/CavRedDivision.png");
+    public static Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
+    public static Texture textureAustria = new Texture("symbols/CavRedDivision.png");
 
     public boolean isSelected;
 

@@ -96,7 +96,7 @@ public class Base extends Image implements Supplier {
         train.order.target = new Target(force, Target.JOIN);
         return train;
     }
-    private Force createTrain(double food, double ammo) {
+    public Force createTrain(double food, double ammo) {
         Force train = new Force(nation, hex);
         train.setPlay(play);
         play.addActor(train);
@@ -124,6 +124,19 @@ public class Base extends Image implements Supplier {
                 ammoLoad -= UnitType.SUPPLY.AMMO_LIMIT;
             }
             train.attach(w);
+        }
+        return train;
+    }
+
+    public Force createTrain(int i, Force train) {
+
+        for(int j = 0; j < i; j++) {
+            Wagon w = new Wagon(nation, hex);
+            w.setPlay(play);
+            train.attach(w);
+            System.out.println("Wagon attached");
+            foodStock -= UnitType.SUPPLY.FOOD_LIMIT;
+            ammoStock -= UnitType.SUPPLY.AMMO_LIMIT;
         }
         return train;
     }

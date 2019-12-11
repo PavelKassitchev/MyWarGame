@@ -20,9 +20,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.HexagonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -80,10 +83,6 @@ public class Play extends Stage implements Screen {
 
 
     private Window selectedWindow;
-    //private Tableau tableau;
-    private Array<Tableau> tableaus = new Array<Tableau>();
-    private int tableauNum;
-
     private boolean specialAction;
 
     //TODO exclude this variables
@@ -443,13 +442,7 @@ public class Play extends Stage implements Screen {
 
     }
 
-    private void closeTableau(int i) {
-        for (int num = tableauNum; num > i - 1; num--) {
-            tableaus.get(num - 1).remove();
-            tableaus.removeValue(tableaus.get(num - 1), true);
-        }
-        tableauNum = i - 1;
-    }
+
     private void clearWindow(Window w) {
         w.parent = null;
         w.remove();
@@ -532,27 +525,21 @@ public class Play extends Stage implements Screen {
             if(a instanceof Hex) {
                 Hex h = (Hex)a;
                 selectedWindow = new Window(this, h, true, X, Y);
+//                InputListener listener = new InputListener();
+//                Gdx.input.getTextInput(listener, "Dialog Title", "Initial Textfield Value", "Hint Value");
                 return true;
             }
 
             if(a instanceof Base) {
-                BitmapFont font = new BitmapFont();
-                font.getData().setScale(0.5f);
-                Skin skin = new Skin();
-                Color color = new Color(1, 0, 1, 1);
-                skin.add("color", color);
-                TextureRegion region = new TextureRegion();
-                region.setRegion(new Texture("square-32.png"));
-                skin.add("region", region);
-                Drawable drawable = skin.getDrawable("region");
-                com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle ws = new com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle(font, color, drawable);
-                skin.add("default", ws);
-                com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle ts = new com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle(drawable, drawable, drawable, font);
-                skin.add("default", ts);
+                Base b = (Base)a;
+                Texture texture = b.nation == FRANCE? new Texture("symbols/CavBlueDivision.png") : new Texture("symbols/CavRedDivision.png");
+
                 Skin s = new Skin(Gdx.files.internal("ui/uiskin.json"));
-                Dialog dialog = new Dialog("My Long Long Dialog", s);
-                dialog.button("Hey!");
-                dialog.show(this);
+
+                WagonListener listener = new WagonListener(b, new Force(this, b.nation, b.hex));
+                Gdx.input.getTextInput(listener, "Load Supplies", null, "Number of Wagons");
+
+                //b.createTrain(5);
             }
 
 
