@@ -904,7 +904,8 @@ public class Play extends Stage implements Screen {
                         return true;
                     }
                     if(label == choice.showLabel) {
-                        System.out.println("Selected Force = " + selectedForce + " Order = " + selectedForce.order + " Path Order = " + selectedForce.order.pathsOrder);
+                        System.out.println("Selected Force = " + selectedForce + " Order = " + selectedForce.order + " Path Order = " + selectedForce.order.pathsOrder
+                         + "Start Hex Row = " + selectedForce.hex.row + " or " + selectedForce.order.pathsOrder.get(0).fromHex.row);
                         if(selectedForce.order.pathsOrder != null && !selectedForce.order.pathsOrder.isEmpty()) {
 
                             clearActor(start, mileStone);
@@ -913,7 +914,7 @@ public class Play extends Stage implements Screen {
                             paths.get(0).startForce = selectedForce;
                             mileStone = selectedForce.order.mileStone;
                             addActor(mileStone);
-                            System.out.println("MILESTONE = " + mileStone + " MileStone HEX = " + mileStone.hex);
+                            System.out.println("MILESTONE = " + mileStone + " MileStone HEX ROW= " + mileStone.hex.row);
                             closeWindows();
                         }
                         else closeWindow(w);
