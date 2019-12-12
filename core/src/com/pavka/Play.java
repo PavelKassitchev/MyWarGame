@@ -239,12 +239,12 @@ public class Play extends Stage implements Screen {
     @Override
     public boolean keyUp(int keycode) {
         if(keycode == Input.Keys.G) {
-            System.out.println("Selected force = " + selectedForce + " selected window = " + selectedWindow + " force to attach = " + forceToAttach + " selected hex = " +
+            System.out.println("Selected force = " + selectedForce + " force to move = " + forceToMove + " drug force = " + drugForce + " selected hex = " +
                     selectedHex);
             System.out.println("Start Hex = " + startHex + " End Hex = " + endHex + " Drug Hex = " + drugHex);
-            if(selectedWindow != null) {
-                System.out.println("Choice = " + selectedWindow.choice);
-            }
+            System.out.println("paths = " + paths);
+            if(selectedForce != null) System.out.println("selectedForce paths = " + selectedForce.order.pathsOrder);
+
         }
         if (keycode == Input.Keys.C) {
             /*Force force = new Force(new Squadron(this, Nation.FRANCE, hexGraph.getHex(8, 4)), new Squadron(this, Nation.FRANCE, hexGraph.getHex(8, 4)));
@@ -610,7 +610,7 @@ public class Play extends Stage implements Screen {
 
             Hex h = getHex(getMousePosOnMap().x, getMousePosOnMap().y);
 
-            if(Path.isHexInside(paths, h)) {
+            if(Path.isHexInside(paths, h) && startHex == null) {
                 drugHex = h;
                 isDrugging = true;
                 drugPath = new Array<Path>(paths);
@@ -715,21 +715,25 @@ public class Play extends Stage implements Screen {
 
             }
             if (a instanceof Force) {
+                System.out.println("FORCE!");
                 Force f = (Force) a;
                 Hex hx = f.hex;
                 if (selectedForce == null && selectedHex == null && selectedBase == null && forceToAttach == null
                         && startHex == null && forceToMove == null) {
+                    System.out.println("WAY 1");
                     closeWindows();
                     selectedWindow = new Window(this, hx, X, Y);
 
                 }
                 else if (startHex != null && forceToMove == null) {
+                    System.out.println("WAY 2");
                     endHex = hx;
                     navigate(INFANTRY.SPEED);
                     startHex = null;
                     endHex = null;
                 }
                 else if(forceToMove != null) {
+                    System.out.println("WAY 3");
                     if (!specialAction) {
                         endHex = hx;
                         navigate(forceToMove.getForceSpeed());
@@ -743,6 +747,7 @@ public class Play extends Stage implements Screen {
                     }
                     else {
                         if(forceToMove.nation == f.nation) {
+                            System.out.println("WAY 4");
                             endHex = hx;
                             navigate(forceToMove.getForceSpeed());
                             forceToMove.order.target = new Target(f, Target.JOIN);
@@ -755,6 +760,7 @@ public class Play extends Stage implements Screen {
                     }
                 }
                 else {
+                    System.out.println("WAY 5");
                     closeWindows();
                 }
                 return true;
@@ -904,15 +910,15 @@ public class Play extends Stage implements Screen {
                         return true;
                     }
                     if(label == choice.showLabel) {
-                        System.out.println("Selected Force = " + selectedForce + " Order = " + selectedForce.order + " Path Order = " + selectedForce.order.pathsOrder
-                         + "Start Hex Row = " + selectedForce.hex.row + " or " + selectedForce.order.pathsOrder.get(0).fromHex.row);
+
                         if(selectedForce.order.pathsOrder != null && !selectedForce.order.pathsOrder.isEmpty()) {
 
                             clearActor(start, mileStone);
-
+                            System.out.println("INSIDE LABEL: paths = " + paths + " selectedForce paths = " + selectedForce.order.pathsOrder);
                             paths = selectedForce.order.pathsOrder;
                             paths.get(0).startForce = selectedForce;
                             mileStone = selectedForce.order.mileStone;
+                            mileStone.days = Path.getDaysToGo(paths, selectedForce.getForceSpeed());
                             addActor(mileStone);
                             System.out.println("MILESTONE = " + mileStone + " MileStone HEX ROW= " + mileStone.hex.row);
                             closeWindows();
@@ -970,7 +976,9 @@ public class Play extends Stage implements Screen {
                                     selectedForce = null;
                                 }
                                 else {
+                                    System.out.println("This branch?");
                                     selectedForce = w.forces.get(i);
+                                    System.out.println("inside this method selected force paths = " + selectedForce.order.pathsOrder);
                                     selectedWindow = new Window(this, w, selectedForce, X, Y);
                                 }
                                 return true;
