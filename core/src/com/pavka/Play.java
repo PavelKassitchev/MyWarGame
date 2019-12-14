@@ -738,7 +738,7 @@ public class Play extends Stage implements Screen {
                         endHex = hx;
                         navigate(forceToMove.getForceSpeed());
                         //paths new function
-                        paths.get(0).startForce = forceToMove;
+                        if(paths.size > 0) paths.get(0).startForce = forceToMove;
                         forceToMove.order.setPathsOrder(paths);
                         clearActor(start);
                         startHex = null;
